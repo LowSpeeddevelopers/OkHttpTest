@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +21,9 @@ public class connection {
 
     String url;
     Context context;
+
+    String name;
+
     connection(String url, Context context){
         this.url=url;
         this.context=context;
@@ -52,8 +54,6 @@ public class connection {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
-
-
                 String jsonresponse =  response.body().string();
 
 
@@ -76,7 +76,7 @@ public class connection {
                     JSONObject userjson=new JSONObject(user);
 
 
-                    String name = userjson.getString("name");
+                    name = userjson.getString("name");
                     String email = userjson.getString("email");
                     String phone = userjson.getString("phone");
                     String updated_at = userjson.getString("updated_at");
@@ -85,7 +85,14 @@ public class connection {
 
 
 
-                    Log.e("name",name);
+                    ((MainActivity)context).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MainActivity.tvText.setText(jsonresponse);
+                        }
+                    });
+
+                    Log.e("name", name);
                     Log.e("email",email);
                     Log.e("phone",phone);
                     Log.e("created_at",created_at);
@@ -99,15 +106,7 @@ public class connection {
 
             }
         });
-
-
-
-
-
-
     }
-
-
 
 
 }
